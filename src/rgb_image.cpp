@@ -98,7 +98,7 @@ RGBImage *RGBImage::create_resized(int w, int h){
     float y_scale = (float)height / h;
     if(x_scale < 1 || y_scale < 1){
         std::cerr << "Cannot upscale image" << std::endl;
-        return;
+        return nullptr;
     }
     for(int i = 0; i < h; i++){
         for(int j = 0; j < w; j++){
