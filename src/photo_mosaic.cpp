@@ -61,6 +61,7 @@ RGBImage *PhotoMosaic::create_mosaic(int mosaic_w, int mosaic_h){
             pixels[i][j] = new int[3];
         }
     }
+    // TODO: Parallelize this loop
     for(int i = 0; i < mosaic_h; i++){
         for(int j = 0; j < mosaic_w; j++){
             int *color = resized->get_pixel(j, i);
