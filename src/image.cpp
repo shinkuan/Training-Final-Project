@@ -9,6 +9,8 @@ Image::~Image(){
     // Free the pixels at inherited classes, not here
 }
 
+Data_Loader Image::loader = Data_Loader();
+
 int Image::get_width(){
     return width;
 }
