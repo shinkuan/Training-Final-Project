@@ -12,7 +12,7 @@ protected:
     static Data_Loader loader; 
 
 public:
-    Image();
+    Image(int w, int h);
     ~Image();
     virtual bool load_image(string filename);
     virtual bool dump_image(string filename);
