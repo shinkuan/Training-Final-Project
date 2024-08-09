@@ -10,6 +10,8 @@
 #define FILTER_CONTRAST_STRETCHING  0b00000100
 #define FILTER_MOSAIC               0b00001000
 
+using namespace std;
+
 class Filter{
 public:
     Filter();

@@ -3,6 +3,8 @@
 
 #include "data_loader.h"
 
+using namespace std;
+
 class Image{
 protected:
     int width;
