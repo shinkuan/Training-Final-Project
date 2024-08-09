@@ -115,6 +115,8 @@ RGBImage *RGBImage::create_resized(int w, int h){
                 }
             }
             new_pixels[i][j][0] = valr / count;
+            new_pixels[i][j][1] = valg / count;
+            new_pixels[i][j][2] = valb / count;
         }
     }
 
