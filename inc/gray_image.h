@@ -3,6 +3,8 @@
 
 #include "image.h"
 
+using namespace std;
+
 class GrayImage : public Image{
 private:
     int **pixels;
@@ -17,6 +19,9 @@ public:
     void display_ascii();
     void display_cmd();
     void resize(int w, int h);
+    GrayImage *create_resized(int w, int h);
+    int get_average_pixel();
+    int get_pixel(int x, int y);
 
 };
 

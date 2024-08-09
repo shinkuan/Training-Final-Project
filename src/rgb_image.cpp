@@ -62,6 +62,28 @@ void RGBImage::resize(int w, int h){
     if(pixels == nullptr){
         return;
     }
+    RGBImage *new_img = create_resized(w, h);
+    if(new_img == nullptr){
+        return;
+    }
+    for(int i = 0; i < height; i++){
+        for(int j = 0; j < width; j++){
+            delete[] pixels[i][j];
+        }
+        delete[] pixels[i];
+    }
+    delete[] pixels;
+    pixels = new_img->pixels;
+    width = w;
+    height = h;
+    new_img->pixels = nullptr;
+    delete new_img;
+}
+
+RGBImage *RGBImage::create_resized(int w, int h){
+    if(pixels == nullptr){
+        return nullptr;
+    }
     int ***new_pixels = new int**[h];
     for(int i = 0; i < h; i++){
         new_pixels[i] = new int*[w];
@@ -96,17 +118,39 @@ void RGBImage::resize(int w, int h){
         }
     }
 
-    for(int i = 0; i < height; i++){
-        for(int j = 0; j < width; j++){
-            delete[] pixels[i][j];
-        }
-        delete[] pixels[i];
-    }
-    delete[] pixels;
-    pixels = new_pixels;
-    width = w;
-    height = h;
-
-    return;
+    RGBImage *new_img = new RGBImage(w, h, new_pixels);
+    return new_img;
 }
     
+
+int *RGBImage::get_average_pixel(){
+    if(pixels == nullptr){
+        return nullptr;
+    }
+    int *avg = new int[3];
+    avg[0] = 0;
+    avg[1] = 0;
+    avg[2] = 0;
+    for(int i = 0; i < height; i++){
+        for(int j = 0; j < width; j++){
+            avg[0] += pixels[i][j][0];
+            avg[1] += pixels[i][j][1];
+            avg[2] += pixels[i][j][2];
+        }
+    }
+    avg[0] /= (width * height);
+    avg[1] /= (width * height);
+    avg[2] /= (width * height);
+    return avg;
+}
+
+int *RGBImage::get_pixel(int x, int y){
+    if(pixels == nullptr || x < 0 || x >= width || y < 0 || y >= height){
+        return nullptr;
+    }
+    int *pixel = new int[3];
+    pixel[0] = pixels[y][x][0];
+    pixel[1] = pixels[y][x][1];
+    pixel[2] = pixels[y][x][2];
+    return pixel;
+}
