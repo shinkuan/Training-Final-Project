@@ -23,14 +23,14 @@ public:
 
 private:
     int8_t option;
-    void apply_box_filter(RGBImage *img);
-    void apply_box_filter(GrayImage *img);
-    void apply_sobel_gradient_filter(RGBImage *img);
-    void apply_sobel_gradient_filter(GrayImage *img);
-    void apply_contrast_stretching_filter(RGBImage *img);
-    void apply_contrast_stretching_filter(GrayImage *img);
-    void apply_mosaic_filter(RGBImage *img);
-    void apply_mosaic_filter(GrayImage *img);
+    static void apply_box_filter(RGBImage *img);
+    static void apply_box_filter(GrayImage *img);
+    static void apply_sobel_gradient_filter(RGBImage *img);
+    static void apply_sobel_gradient_filter(GrayImage *img);
+    static void apply_contrast_stretching_filter(RGBImage *img);
+    static void apply_contrast_stretching_filter(GrayImage *img);
+    static void apply_mosaic_filter(RGBImage *img);
+    static void apply_mosaic_filter(GrayImage *img);
 
 };
 
