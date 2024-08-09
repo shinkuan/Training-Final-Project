@@ -6,17 +6,17 @@
 
 int main(int argc, char *argv[]){
     Image *img1 = new GrayImage();
-    img1->LoadImage("Image-Folder/mnist/img_100.jpg");
-    img1->DumpImage("img1.jpg");
-    img1->Display_X_Server();
-    img1->Display_CMD();
+    img1->load_image("Image-Folder/mnist/img_100.jpg");
+    img1->dump_image("img1.jpg");
+    img1->display_x_server();
+    img1->display_cmd();
     
 
     Image *img2 = new RGBImage();
-    img2->LoadImage("Image-Folder/lena.jpg");
-    img2->DumpImage("img2.jpg");
-    img2->Display_X_Server();
-    img2->Display_CMD();
+    img2->load_image("Image-Folder/lena.jpg");
+    img2->dump_image("img2.jpg");
+    img2->display_x_server();
+    img2->display_cmd();
 
     // some bit field filter design driven code here
 
