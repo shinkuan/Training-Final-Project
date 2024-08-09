@@ -17,6 +17,7 @@ public:
     virtual void display_x_server();
     virtual void display_ascii();
     virtual void display_cmd();
+    virtual void resize(int w, int h);
     int get_width();
     int get_height();
 

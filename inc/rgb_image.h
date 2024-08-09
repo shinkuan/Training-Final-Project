@@ -16,6 +16,7 @@ public:
     void display_x_server();
     void display_ascii();
     void display_cmd();
+    void resize(int w, int h);
 
 };
 
