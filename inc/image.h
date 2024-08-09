@@ -15,7 +15,7 @@ public:
     Image(int w, int h);
     ~Image();
     virtual bool load_image(string filename);
-    virtual bool dump_image(string filename);
+    virtual void dump_image(string filename);
     virtual void display_x_server();
     virtual void display_ascii();
     virtual void display_cmd();
