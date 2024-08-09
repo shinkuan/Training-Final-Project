@@ -3,6 +3,8 @@
 
 #include "image.h"
 
+using namespace std;
+
 class RGBImage : public Image{
 private:
     int ***pixels;
@@ -16,6 +18,10 @@ public:
     void display_x_server();
     void display_ascii();
     void display_cmd();
+    void resize(int w, int h);
+    RGBImage *create_resized(int w, int h);
+    int *get_average_pixel();
+    int *get_pixel(int x, int y);
 
 };
 
