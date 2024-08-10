@@ -47,6 +47,8 @@ void Filter::apply(GrayImage *img){
 
 void Filter::apply_box_filter(RGBImage *img){
     // Apply the box filter to the RGB image
+    //模糊處理
+    
 }
 
 void Filter::apply_box_filter(GrayImage *img){
@@ -55,6 +57,8 @@ void Filter::apply_box_filter(GrayImage *img){
 
 void Filter::apply_sobel_gradient_filter(RGBImage *img){
     // Apply the Sobel gradient filter to the RGB image
+    //垂直和水平的線條
+    
 }
 
 void Filter::apply_sobel_gradient_filter(GrayImage *img){
