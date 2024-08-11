@@ -47,7 +47,7 @@ void Filter::apply(GrayImage *img){
 
 void Filter::apply_box_filter(RGBImage *img){
     // Apply the box filter to the RGB image
-    //模糊處理
+    //blurring
     
 }
 
@@ -57,8 +57,8 @@ void Filter::apply_box_filter(GrayImage *img){
 
 void Filter::apply_sobel_gradient_filter(RGBImage *img){
     // Apply the Sobel gradient filter to the RGB image
-    //垂直和水平的線條
-    
+    //vertical line and horizental line
+
 }
 
 void Filter::apply_sobel_gradient_filter(GrayImage *img){
@@ -67,6 +67,8 @@ void Filter::apply_sobel_gradient_filter(GrayImage *img){
 
 void Filter::apply_contrast_stretching_filter(RGBImage *img){
     // Apply the contrast stretching filter to the RGB image
+    //Edge crispening
+    
 }
 
 void Filter::apply_contrast_stretching_filter(GrayImage *img){
