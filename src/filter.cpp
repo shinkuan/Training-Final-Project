@@ -184,18 +184,137 @@ void Filter::apply_sobel_gradient_filter(GrayImage *img){
 void Filter::apply_contrast_stretching_filter(RGBImage *img){
     // Apply the contrast stretching filter to the RGB image
     // Edge crispening
-    
+    int width = img->get_width();
+    int height = img->get_height();
+
+    // Find min and max pixel values for each channel
+    int min_r = 255, max_r = 0;
+    int min_g = 255, max_g = 0;
+    int min_b = 255, max_b = 0;
+
+    for(int y = 0; y < height; y++) {
+        for(int x = 0; x < width; x++) {
+            int *pixel = img->get_pixel(x, y);
+            min_r = std::min(min_r, pixel[0]);
+            max_r = std::max(max_r, pixel[0]);
+            min_g = std::min(min_g, pixel[1]);
+            max_g = std::max(max_g, pixel[1]);
+            min_b = std::min(min_b, pixel[2]);
+            max_b = std::max(max_b, pixel[2]);
+        }
+    }
+
+    // Apply contrast stretching
+    for(int y = 0; y < height; y++) {
+        for(int x = 0; x < width; x++) {
+            int *pixel = img->get_pixel(x, y);
+
+            pixel[0] = (pixel[0] - min_r) * 255 / (max_r - min_r);
+            pixel[1] = (pixel[1] - min_g) * 255 / (max_g - min_g);
+            pixel[2] = (pixel[2] - min_b) * 255 / (max_b - min_b);
+
+            img->set_pixel(x, y, pixel[0], pixel[1], pixel[2]);
+        }
+    }
 }
 
 void Filter::apply_contrast_stretching_filter(GrayImage *img){
     // Apply the contrast stretching filter to the gray image
+    int width = img->get_width();
+    int height = img->get_height();
+
+    // Find min and max pixel values
+    int min_val = 255, max_val = 0;
+
+    for(int y = 0; y < height; y++) {
+        for(int x = 0; x < width; x++) {
+            int pixel = img->get_pixel(x, y);
+            min_val = std::min(min_val, pixel);
+            max_val = std::max(max_val, pixel);
+        }
+    }
+
+    // Apply contrast stretching
+    for(int y = 0; y < height; y++) {
+        for(int x = 0; x < width; x++) {
+            int pixel = img->get_pixel(x, y);
+            int stretched_pixel = (pixel - min_val) * 255 / (max_val - min_val);
+            img->set_pixel(x, y, stretched_pixel);
+        }
+    }
 }
 
 void Filter::apply_mosaic_filter(RGBImage *img){
     // Apply the mosaic filter to the RGB image
+    int width = img->get_width();
+    int height = img->get_height();
+    int block_size = 6;  // define the size of mosaic
+
+    for(int y = 0; y < height; y += block_size) {
+        for(int x = 0; x < width; x += block_size) {
+            int red_sum = 0, green_sum = 0, blue_sum = 0;
+            int pixel_count = 0;
+
+            // calculate the sum of pixel
+            for(int ky = 0; ky < block_size; ky++) {
+                for(int kx = 0; kx < block_size; kx++) {
+                    if(y + ky < height && x + kx < width) {
+                        int *pixel = img->get_pixel(x + kx, y + ky);
+                        red_sum += pixel[0];
+                        green_sum += pixel[1];
+                        blue_sum += pixel[2];
+                        pixel_count++;
+                    }
+                }
+            }
+
+            // calculate the average
+            int red_avg = red_sum / pixel_count;
+            int green_avg = green_sum / pixel_count;
+            int blue_avg = blue_sum / pixel_count;
+
+            // apply to the pixel
+            for(int ky = 0; ky < block_size; ky++) {
+                for(int kx = 0; kx < block_size; kx++) {
+                    if(y + ky < height && x + kx < width) {
+                        img->set_pixel(x + kx, y + ky, red_avg, green_avg, blue_avg);
+                    }
+                }
+            }
+        }
+    }
 }
 
 void Filter::apply_mosaic_filter(GrayImage *img){
     // Apply the mosaic filter to the gray image
+    int width = img->get_width();
+    int height = img->get_height();
+    int block_size = 6;  
+
+    for(int y = 0; y < height; y += block_size) {
+        for(int x = 0; x < width; x += block_size) {
+            int pixel_sum = 0;
+            int pixel_count = 0;
+
+            for(int ky = 0; ky < block_size; ky++) {
+                for(int kx = 0; kx < block_size; kx++) {
+                    if(y + ky < height && x + kx < width) {
+                        pixel_sum += img->get_pixel(x + kx, y + ky);
+                        pixel_count++;
+                    }
+                }
+            }
+
+            int pixel_avg = pixel_sum / pixel_count;
+
+            for(int ky = 0; ky < block_size; ky++) {
+                for(int kx = 0; kx < block_size; kx++) {
+                    if(y + ky < height && x + kx < width) {
+                        img->set_pixel(x + kx, y + ky, pixel_avg);
+                    }
+                }
+            }
+        }
+    }
 }
 
