@@ -27,12 +27,12 @@ int main(int argc, char *argv[]){
     // Other filter
     Filter filter;
 
-    int choose=4;
+    int choose=2;
     if(choose==1){
         // Box Filter
         filter.set_option(FILTER_BOX);
         filter.apply(rgbImg);
-        rgbImg->dump_image("out_Image/rgb_box_filtered.jpg");
+        //rgbImg->dump_image("out_Image/rgb_box_filtered.jpg");
 
         //filter.set_option(FILTER_BOX);
         filter.apply(grayImg);
