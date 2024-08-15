@@ -1,13 +1,13 @@
 # ompiler & Linker settings
 CXX = g++
-CXXFLAGS = -I ./inc -I ./third-party/CImg -I ./third-party/libjpeg -I ./Data-Loader -std=c++11
+CXXFLAGS = -I ./inc -I ./third-party/CImg -I ./third-party/libjpeg -I ./Data-Loader -std=c++11 -mno-avx
 OPTFLAGS = -march=native -flto -funroll-loops -finline-functions -ffast-math -O3
 WARNINGS = -g -Wall
 LINKER = -L/usr/X11R6/lib -lm -lpthread -lX11 -L./third-party/libjpeg -ljpeg -lpng
 
 # Valgrind for memory issue
 CHECKCC = valgrind
-CHECKFLAGS = --leak-check=full -s --show-leak-kinds=all --track-origins=yes 
+CHECKFLAGS = --leak-check=full -s --show-leak-kinds=all --track-origins=yes
 
 # Source files and object files
 SRCDIR = src
