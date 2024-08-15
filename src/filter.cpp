@@ -100,23 +100,22 @@ void Filter::apply_box_filter(GrayImage *img){
 
 void Filter::apply_sobel_gradient_filter(RGBImage *img){
     // Apply the Sobel gradient filter to the RGB image
-    //vertical line and horizental line
+    // vertical line and horizental line
     int width = img->get_width();
     int height = img->get_height();
 
-    // 創建一個新的灰階圖像
+    // Convert the RGB image to a grayscale image
     int **gray_pixels = new int*[height];
     for (int i = 0; i < height; i++) {
         gray_pixels[i] = new int[width];
         for (int j = 0; j < width; j++) {
             int *pixel = img->get_pixel(j, i);
-            // 將 RGB 轉換為灰階值
             gray_pixels[i][j] = static_cast<int>(0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2]);
         }
     }
-    GrayImage gray_img(width, height, gray_pixels);
+    GrayImage *gray_img = new GrayImage(width, height, gray_pixels);
 
-    // 定義 Sobel 濾波器
+    // Define Sobel filters
     int Gx[3][3] = {
         {1, 0, -1},
         {2, 0, -2},
@@ -129,70 +128,25 @@ void Filter::apply_sobel_gradient_filter(RGBImage *img){
         {-1, -2, -1}
     };
 
-    // 對灰階圖像應用 Sobel 濾波器
-    /*for (int y = 1; y < height - 1; y++) {
-        for (int x = 1; x < width - 1; x++) {
-            int Gx_value = 0, Gy_value = 0;
-
-            for (int ky = -1; ky <= 1; ky++) {
-                for (int kx = -1; kx <= 1; kx++) {
-                    int pixel = gray_img.get_pixel(x + kx, y + ky);
-                    Gx_value += pixel * Gx[ky + 1][kx + 1];
-                    Gy_value += pixel * Gy[ky + 1][kx + 1];
-                }
-            }
-
-            int gradient = std::min(255, std::max(0, static_cast<int>(sqrt(Gx_value * Gx_value + Gy_value * Gy_value))));
-            gray_img.set_pixel(x, y, gradient);
-        }
-    }
-
-    // 將灰階結果輸出為圖片
-    gray_img.dump_image("box_filtered.jpg");
-
-    // 釋放內存
-    for (int i = 0; i < height; i++) {
-        delete[] gray_pixels[i];
-    }
-    delete[] gray_pixels;*/
-     // 創建一個新的灰階圖像來存儲濾波結果
-    int **sobel_pixels = new int*[height];
-    for (int i = 0; i < height; i++) {
-        sobel_pixels[i] = new int[width];
-        std::fill(sobel_pixels[i], sobel_pixels[i] + width, 0); // 初始化為0
-    }
-
-    // 對灰階圖像應用 Sobel 濾波器
+    // Apply the Sobel filter
     for (int y = 1; y < height - 1; y++) {
         for (int x = 1; x < width - 1; x++) {
             int Gx_value = 0, Gy_value = 0;
 
             for (int ky = -1; ky <= 1; ky++) {
                 for (int kx = -1; kx <= 1; kx++) {
-                    int pixel = gray_img.get_pixel(x + kx, y + ky);
+                    int pixel = gray_img->get_pixel(x + kx, y + ky);
                     Gx_value += pixel * Gx[ky + 1][kx + 1];
                     Gy_value += pixel * Gy[ky + 1][kx + 1];
                 }
             }
-
-            // 計算梯度並裁剪到 [0, 255] 範圍內
             int gradient = static_cast<int>(sqrt(Gx_value * Gx_value + Gy_value * Gy_value));
             gradient = std::min(255, std::max(0, gradient));
-            sobel_pixels[y][x] = gradient;
+            img->set_pixel(x, y, gradient, gradient, gradient);
         }
     }
 
-    // 將 Sobel 濾波器結果轉換為灰階圖像
-    GrayImage sobel_img(width, height, sobel_pixels);
-    sobel_img.dump_image("sobel_filtered.jpg");
-
-    // 釋放內存
-    for (int i = 0; i < height; i++) {
-        delete[] gray_pixels[i];
-        delete[] sobel_pixels[i];
-    }
-    delete[] gray_pixels;
-    delete[] sobel_pixels;
+    delete gray_img;
 }
 
 void Filter::apply_sobel_gradient_filter(GrayImage *img){
