@@ -129,13 +129,20 @@ void Filter::apply_sobel_gradient_filter(RGBImage *img){
     };
 
     // Apply the Sobel filter
-    for (int y = 1; y < height - 1; y++) {
-        for (int x = 1; x < width - 1; x++) {
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
             int Gx_value = 0, Gy_value = 0;
 
             for (int ky = -1; ky <= 1; ky++) {
                 for (int kx = -1; kx <= 1; kx++) {
-                    int pixel = gray_img->get_pixel(x + kx, y + ky);
+                    int px = x + kx;
+                    int py = y + ky;
+                    int pixel = 0;
+                    if(px < 0 || px >= width || py < 0 || py >= height){
+                        pixel = 0;
+                    } else {
+                        pixel = gray_img->get_pixel(px, py);
+                    }
                     Gx_value += pixel * Gx[ky + 1][kx + 1];
                     Gy_value += pixel * Gy[ky + 1][kx + 1];
                 }
