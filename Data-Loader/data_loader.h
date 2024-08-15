@@ -24,17 +24,17 @@ class Data_Loader{
 public:
     Data_Loader();
     ~Data_Loader();
-    int **Load_Gray(string filename, int *w, int *h);
-    int ***Load_RGB(string filename, int *w, int *h);
-    void Dump_Gray(int w, int h, int **pixels, string filename);
+    int **Load_Gray(string filename, int *w, int *h);   //using pointer to set hight and weight。2D-array
+    int ***Load_RGB(string filename, int *w, int *h);   //3D-array
+    void Dump_Gray(int w, int h, int **pixels, string filename);    //output jpg or png
     void Dump_RGB(int w, int h, int ***pixels, string filename);
-    void Display_Gray_X_Server(int w, int h, int **pixels);
+    void Display_Gray_X_Server(int w, int h, int **pixels);     //connect X-Server to show the graph
     void Display_RGB_X_Server(int w, int h, int ***pixels);
     void Display_Gray_ASCII(int w, int h, int **pixels);
     void Display_RGB_ASCII(int w, int h, int ***pixels);
     void Display_Gray_CMD(string filename);
     void Display_RGB_CMD(string filename);
-    static bool List_Directory(string directoryPath, vector<string> &filenames);
+    static bool List_Directory(string directoryPath, vector<string> &filenames);    //name of graph
 
 private:
     bool File_Exists(const string &filename);

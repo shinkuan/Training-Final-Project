@@ -128,3 +128,9 @@ int GrayImage::get_pixel(int x, int y){
     }
     return pixels[y][x];
 }
+
+void GrayImage::set_pixel(int x, int y, int value) {
+    if (pixels != nullptr && x >= 0 && x < width && y >= 0 && y < height) {
+        pixels[y][x] = value;
+    }
+}

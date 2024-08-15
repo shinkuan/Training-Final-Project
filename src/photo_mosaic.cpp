@@ -70,16 +70,21 @@ RGBImage *PhotoMosaic::create_mosaic(int mosaic_w, int mosaic_h){
             );
             for(int y = 0; y < TILE_HEIGHT; y++){
                 for(int x = 0; x < TILE_WIDTH; x++){
+                    int *tile_pixel = t->img->get_pixel(x, y);
                     pixels[i*TILE_HEIGHT + y][j*TILE_WIDTH + x][0] = 
-                        t->img->get_pixel(x, y)[0];
+                        tile_pixel[0];
                     pixels[i*TILE_HEIGHT + y][j*TILE_WIDTH + x][1] =
-                        t->img->get_pixel(x, y)[1];
+                        tile_pixel[1];
                     pixels[i*TILE_HEIGHT + y][j*TILE_WIDTH + x][2] =
-                        t->img->get_pixel(x, y)[2];
+                        tile_pixel[2];
+                    delete []tile_pixel;
                 }
             }
+            delete []color;
         }
     }
+    delete resized;
+
     RGBImage *mosaic = new RGBImage(TILE_WIDTH*mosaic_w, TILE_HEIGHT*mosaic_h, pixels);
     return mosaic;
 }

@@ -81,6 +81,11 @@ int **Data_Loader::Load_Gray(string filename, int *w, int *h){
         return pixels;
     }
 
+    for(int i = 0; i < _h; i++){
+        delete []pixels[i];
+    }
+    delete []pixels;
+
     return nullptr;
 }
 

@@ -23,6 +23,8 @@ public:
     int get_average_pixel();
     int get_pixel(int x, int y);
 
+    void set_pixel(int x, int y, int value);
+
 };
 
 #endif

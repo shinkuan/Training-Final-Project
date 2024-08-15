@@ -156,3 +156,11 @@ int *RGBImage::get_pixel(int x, int y){
     pixel[2] = pixels[y][x][2];
     return pixel;
 }
+
+void RGBImage::set_pixel(int x, int y, int red, int green, int blue) {
+    if (pixels != nullptr && x >= 0 && x < width && y >= 0 && y < height) {
+        pixels[y][x][0] = red;
+        pixels[y][x][1] = green;
+        pixels[y][x][2] = blue;
+    }
+}
