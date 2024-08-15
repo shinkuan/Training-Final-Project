@@ -60,6 +60,7 @@ void Filter::apply_box_filter(RGBImage *img){
                     red_sum += pixel[0];
                     green_sum += pixel[1];
                     blue_sum += pixel[2];
+                    delete[] pixel;
                 }
             }
             int red_avg = red_sum / 9;
@@ -111,6 +112,7 @@ void Filter::apply_sobel_gradient_filter(RGBImage *img){
         for (int j = 0; j < width; j++) {
             int *pixel = img->get_pixel(j, i);
             gray_pixels[i][j] = static_cast<int>(0.299 * pixel[0] + 0.587 * pixel[1] + 0.114 * pixel[2]);
+            delete[] pixel;
         }
     }
     GrayImage *gray_img = new GrayImage(width, height, gray_pixels);
@@ -213,6 +215,7 @@ void Filter::apply_contrast_stretching_filter(RGBImage *img){
             max_g = std::max(max_g, pixel[1]);
             min_b = std::min(min_b, pixel[2]);
             max_b = std::max(max_b, pixel[2]);
+            delete[] pixel;
         }
     }
 
@@ -226,6 +229,7 @@ void Filter::apply_contrast_stretching_filter(RGBImage *img){
             pixel[2] = (pixel[2] - min_b) * 255 / (max_b - min_b);
 
             img->set_pixel(x, y, pixel[0], pixel[1], pixel[2]);
+            delete[] pixel;
         }
     }
 }
@@ -276,6 +280,7 @@ void Filter::apply_mosaic_filter(RGBImage *img){
                         green_sum += pixel[1];
                         blue_sum += pixel[2];
                         pixel_count++;
+                        delete[] pixel;
                     }
                 }
             }
