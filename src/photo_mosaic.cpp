@@ -33,16 +33,38 @@ void PhotoMosaic::set_tiles(string tile_folder){
     tiles.clear();
     vector<string> filenames;
     Data_Loader::List_Directory(tile_folder, filenames);
-    for(int i = 0; i < filenames.size(); i++){
+
+    std::mutex tiles_mutex;  // For protecting tiles vector
+    const int max_threads = std::thread::hardware_concurrency(); // Maximum number of threads supported by hardware
+    std::vector<std::future<void>> futures;
+
+    auto process_tile = [&](const string& filename) {
         Tile t;
         t.img = new RGBImage();
-        t.img->load_image(filenames[i]);
+        t.img->load_image(filename);
         int *avg = t.img->get_average_pixel();
         t.avg_r = avg[0];
         t.avg_g = avg[1];
         t.avg_b = avg[2];
         delete []avg;
+
+        // Lock the tiles vector before pushing a new tile
+        std::lock_guard<std::mutex> guard(tiles_mutex);
         tiles.push_back(t);
+    };
+
+    for (int i = 0; i < filenames.size(); i++) {
+        if (futures.size() >= max_threads) {
+            for (auto &fut : futures) {
+                fut.get();
+            }
+            futures.clear();
+        }
+        futures.push_back(std::async(std::launch::async, process_tile, filenames[i]));
+    }
+
+    for (auto &fut : futures) {
+        fut.get();
     }
 }
 
@@ -61,30 +83,43 @@ RGBImage *PhotoMosaic::create_mosaic(int mosaic_w, int mosaic_h){
             pixels[i][j] = new int[3];
         }
     }
-    // TODO: Parallelize this loop
-    for(int i = 0; i < mosaic_h; i++){
-        for(int j = 0; j < mosaic_w; j++){
-            int *color = resized->get_pixel(j, i);
-            Tile *t = find_closest_tile(
-                color[0], color[1], color[2], tiles
-            );
-            for(int y = 0; y < TILE_HEIGHT; y++){
-                for(int x = 0; x < TILE_WIDTH; x++){
-                    int *tile_pixel = t->img->get_pixel(x, y);
-                    pixels[i*TILE_HEIGHT + y][j*TILE_WIDTH + x][0] = 
-                        tile_pixel[0];
-                    pixels[i*TILE_HEIGHT + y][j*TILE_WIDTH + x][1] =
-                        tile_pixel[1];
-                    pixels[i*TILE_HEIGHT + y][j*TILE_WIDTH + x][2] =
-                        tile_pixel[2];
-                    delete []tile_pixel;
-                }
+
+    // Process each block in parallel
+    auto process_block = [&](int i, int j) {
+        int *color = resized->get_pixel(j, i);
+        Tile *t = find_closest_tile(color[0], color[1], color[2], tiles);
+        for(int y = 0; y < TILE_HEIGHT; y++){
+            for(int x = 0; x < TILE_WIDTH; x++){
+                int *tile_pixel = t->img->get_pixel(x, y);
+                pixels[i*TILE_HEIGHT + y][j*TILE_WIDTH + x][0] = tile_pixel[0];
+                pixels[i*TILE_HEIGHT + y][j*TILE_WIDTH + x][1] = tile_pixel[1];
+                pixels[i*TILE_HEIGHT + y][j*TILE_WIDTH + x][2] = tile_pixel[2];
+                delete[] tile_pixel;
             }
-            delete []color;
+        }
+        delete[] color;
+    };
+
+    const int max_threads = std::thread::hardware_concurrency();
+    std::vector<std::future<void>> futures;
+
+    for (int i = 0; i < mosaic_h; i++) {
+        for (int j = 0; j < mosaic_w; j++) {
+            if (futures.size() >= max_threads) {
+                for (auto &fut : futures) {
+                    fut.get();
+                }
+                futures.clear();
+            }
+            futures.push_back(std::async(std::launch::async, process_block, i, j));
         }
     }
-    delete resized;
 
+    for (auto &fut : futures) {
+        fut.get();
+    }
+
+    delete resized;
     RGBImage *mosaic = new RGBImage(TILE_WIDTH*mosaic_w, TILE_HEIGHT*mosaic_h, pixels);
     return mosaic;
 }

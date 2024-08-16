@@ -1,7 +1,9 @@
 #ifndef _PHOTO_MOSAIC_H_
 #define _PHOTO_MOSAIC_H_
 
+#include <future>
 #include <vector>
+#include <chrono>
 #include <map>
 #include "image.h"
 #include "rgb_image.h"
